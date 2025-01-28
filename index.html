@@ -15,7 +15,6 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      transition: background 1s ease;
     }
 
     #scene {
@@ -40,10 +39,6 @@
       filter: drop-shadow(0 0 10px red);
     }
 
-    .knife.dragging {
-      cursor: grabbing;
-    }
-
     #finalScene {
       display: none;
       text-align: center;
@@ -52,7 +47,6 @@
     .message {
       font-size: 48px;
       color: white;
-      margin: 20px;
       animation: fadeIn 3s ease forwards;
     }
 
@@ -66,7 +60,6 @@
       border-radius: 10px;
       cursor: pointer;
       animation: bounce 2s infinite alternate ease-in-out;
-      position: relative;
     }
 
     .hidden-pic {
@@ -94,42 +87,22 @@
     }
 
     @keyframes bounce {
-      from {
-        transform: translateY(0);
-      }
-      to {
-        transform: translateY(-10px);
-      }
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
     }
 
     @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes weirdAnimation {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.5) rotate(15deg); }
-      100% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
 
     @keyframes explode {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(10);
-        opacity: 0;
-      }
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(10); opacity: 0; }
     }
 
     .mango.split {
-      animation: weirdAnimation 1s forwards;
+      animation: explode 1s forwards;
     }
   </style>
 </head>
@@ -146,42 +119,62 @@
   </div>
 
   <div class="fireworks" id="fireworks"></div>
-  
-      <script>
-  const knife = document.getElementById('knife');
-  const mango = document.getElementById('mango');
-  const body = document.body;
-  const scene = document.getElementById('scene');
-  const finalScene = document.getElementById('finalScene');
-  const yesButton = document.getElementById('yesButton');
-  const couplePhoto = document.getElementById('couplePhoto');
-  const fireworksContainer = document.getElementById('fireworks');
 
-  let isDragging = false;
+  <script>
+    const knife = document.getElementById('knife');
+    const mango = document.getElementById('mango');
+    const body = document.body;
+    const scene = document.getElementById('scene');
+    const finalScene = document.getElementById('finalScene');
+    const yesButton = document.getElementById('yesButton');
+    const fireworksContainer = document.getElementById('fireworks');
 
-  // Knife follows mouse
-document.addEventListener('mousemove', (e) => {
-  knife.style.left = `${e.pageX - knife.offsetWidth / 2}px`;
-  knife.style.top = `${e.pageY - knife.offsetHeight / 2}px`;
+    // Knife follows mouse
+    document.addEventListener('mousemove', (e) => {
+      knife.style.left = `${e.pageX - knife.offsetWidth / 2}px`;
+      knife.style.top = `${e.pageY - knife.offsetHeight / 2}px`;
+    });
 
-  // Detect if mango is hovered
-  const mangoRect = mango.getBoundingClientRect();
-  if (
-    e.pageX > mangoRect.left &&
-    e.pageX < mangoRect.right &&
-    e.pageY > mangoRect.top &&
-    e.pageY < mangoRect.bottom
-  ) {
-    mango.classList.add('split');
-    setTimeout(() => {
-      scene.style.display = 'none';
-      finalScene.style.display = 'block';
-      body.style.background = "url('istockphoto-1133758459-612x612.jpg') no-repeat center center";
-      body.style.backgroundSize = 'cover';
-      showFireworks();
-    }, 1000);
-  }
-});
-</script>
-   
+    // Mango splits on hover
+    document.addEventListener('mousemove', (e) => {
+      const mangoRect = mango.getBoundingClientRect();
+      if (
+        e.pageX > mangoRect.left &&
+        e.pageX < mangoRect.right &&
+        e.pageY > mangoRect.top &&
+        e.pageY < mangoRect.bottom
+      ) {
+        splitMango();
+      }
+    });
 
+    // Mango splitting function
+    function splitMango() {
+      if (!mango.classList.contains('split')) {
+        mango.classList.add('split');
+        setTimeout(() => {
+          scene.style.display = 'none';
+          finalScene.style.display = 'block';
+          showFireworks();
+        }, 1000);
+      }
+    }
+
+    // Fireworks effect
+    function showFireworks() {
+      for (let i = 0; i < 50; i++) {
+        const firework = document.createElement('div');
+        firework.classList.add('firework');
+        firework.style.left = `${Math.random() * 100}%`;
+        firework.style.top = `${Math.random() * 100}%`;
+        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        fireworksContainer.appendChild(firework);
+
+        setTimeout(() => {
+          firework.remove();
+        }, 1500);
+      }
+    }
+  </script>
+</body>
+</html>

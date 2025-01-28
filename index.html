@@ -46,26 +46,40 @@
     .message {
       font-size: 48px;
       color: red;
+      font-weight: bold;
       font-style: italic;
       text-shadow: 2px 2px yellow;
-      animation: rotateText 5s infinite;
+      animation: glow 2s infinite alternate ease-in-out;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px yellow; }
+      100% { text-shadow: 0 0 20px red, 0 0 40px red, 0 0 60px yellow; }
     }
 
     .yes-button {
       display: inline-block;
-      background-color: pink;
+      background: linear-gradient(45deg, red, orange, yellow, green, blue, purple);
       color: white;
       padding: 20px 40px;
       font-size: 24px;
       border: 5px dashed yellow;
       border-radius: 50px;
       cursor: pointer;
-      animation: growShrink 2s infinite alternate ease-in-out;
+      animation: flash 1s infinite alternate ease-in-out;
+    }
+
+    @keyframes flash {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2); }
     }
 
     .hidden-pic {
       display: none;
       margin-top: 20px;
+      width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
     }
 
     .fireworks {
@@ -84,24 +98,7 @@
       height: 10px;
       border-radius: 50%;
       background: white;
-      animation: explode 5s infinite ease-in-out;
-    }
-
-    @keyframes wobble {
-      0% { transform: rotate(-10deg); }
-      50% { transform: rotate(10deg) scale(1.1); }
-      100% { transform: rotate(-10deg); }
-    }
-
-    @keyframes rotateText {
-      0% { transform: rotate(0); }
-      50% { transform: rotate(360deg); }
-      100% { transform: rotate(0); }
-    }
-
-    @keyframes growShrink {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.2); }
+      animation: explode 1.5s infinite ease-out;
     }
 
     @keyframes explode {
@@ -118,6 +115,45 @@
       0% { transform: rotate(0) scale(1); opacity: 1; }
       100% { transform: rotate(720deg) scale(0); opacity: 0; }
     }
+
+    .dancing-banana {
+      width: 100px;
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: dance 2s infinite ease-in-out;
+    }
+
+    @keyframes dance {
+      0% { transform: translateX(-50%) rotate(-10deg); }
+      50% { transform: translateX(-50%) rotate(10deg); }
+      100% { transform: translateX(-50%) rotate(-10deg); }
+    }
+
+    .rainbow-heart {
+      position: absolute;
+      font-size: 40px;
+      animation: spin 2s infinite linear;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: red;
+      animation: confetti-fall 3s infinite ease-in-out;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(0) rotate(0); }
+      100% { transform: translateY(100vh) rotate(720deg); }
+    }
   </style>
 </head>
 <body>
@@ -127,9 +163,10 @@
   </div>
 
   <div id="finalScene">
-    <div class="message">BE MY VALENTINE, YOU FOOL!</div>
+    <div class="message">PLEASE BE MY VALENTINE ASKIM 💘</div>
     <button class="yes-button" id="yesButton">YESSS!!!</button>
     <img src="Photo-on-19-03-2024-at-8.42-AM.jpg" alt="Couple Photo" class="hidden-pic" id="couplePhoto">
+    <img src="https://emojicdn.elk.sh/🍌" alt="Dancing Banana" class="dancing-banana" id="dancingBanana">
   </div>
 
   <div class="fireworks" id="fireworks"></div>
@@ -142,6 +179,7 @@
     const finalScene = document.getElementById('finalScene');
     const yesButton = document.getElementById('yesButton');
     const fireworksContainer = document.getElementById('fireworks');
+    const dancingBanana = document.getElementById('dancingBanana');
 
     // Knife follows mouse
     document.addEventListener('mousemove', (e) => {
@@ -168,23 +206,26 @@
           scene.style.display = 'none';
           finalScene.style.display = 'block';
           showFireworks();
+          dancingBanana.style.display = 'block';
         }, 2000);
       }
     }
 
     // Fireworks
     function showFireworks() {
+      const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
       for (let i = 0; i < 100; i++) {
         const firework = document.createElement('div');
         firework.classList.add('firework');
         firework.style.left = `${Math.random() * 100}%`;
         firework.style.top = `${Math.random() * 100}%`;
-        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+        firework.style.animationDuration = `${Math.random() * 1 + 1}s`;
         fireworksContainer.appendChild(firework);
 
         setTimeout(() => {
           firework.remove();
-        }, 5000);
+        }, 2000);
       }
     }
 
@@ -193,8 +234,25 @@
       yesButton.style.display = 'none';
       const couplePhoto = document.getElementById('couplePhoto');
       couplePhoto.style.display = 'block';
-      body.style.background = 'black';
+      body.style.background = 'linear-gradient(45deg, red, orange, yellow, green, blue, purple)';
+      showFireworks(); // More fireworks on click
+      showConfetti(); // Confetti explosion
     });
+
+    // Confetti explosion
+    function showConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        fireworksContainer.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 3000);
+      }
+    }
   </script>
 </body>
 </html>

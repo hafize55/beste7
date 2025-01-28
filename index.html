@@ -24,7 +24,7 @@
     }
 
     .mango {
-      width: 150px;
+      width: 200px;
       position: relative;
       animation: bounce 1s infinite alternate;
     }
@@ -32,27 +32,16 @@
     .knife {
       width: 100px;
       position: absolute;
-      top: 60%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       cursor: pointer;
       transition: transform 0.1s;
+      filter: drop-shadow(0 0 10px red);
     }
 
     .knife.dragging {
       cursor: grabbing;
-    }
-
-    .text {
-      position: absolute;
-      top: 80%;
-      left: 50%;
-      transform: translateX(-50%);
-      color: white;
-      font-size: 20px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 10px;
-      border-radius: 10px;
     }
 
     #finalScene {
@@ -61,9 +50,10 @@
     }
 
     .message {
-      font-size: 36px;
-      color: red;
+      font-size: 48px;
+      color: white;
       margin: 20px;
+      animation: fadeIn 3s ease forwards;
     }
 
     .yes-button {
@@ -75,16 +65,32 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .yes-button:hover {
-      transform: scale(1.1);
+      animation: bounce 2s infinite alternate ease-in-out;
+      position: relative;
     }
 
     .hidden-pic {
       display: none;
       margin-top: 20px;
+    }
+
+    .fireworks {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .firework {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: white;
+      animation: explode 1.5s ease-out forwards;
     }
 
     @keyframes bounce {
@@ -96,10 +102,30 @@
       }
     }
 
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
     @keyframes weirdAnimation {
       0% { transform: scale(1); }
-      50% { transform: scale(1.2) rotate(15deg); }
+      50% { transform: scale(1.5) rotate(15deg); }
       100% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+    }
+
+    @keyframes explode {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(10);
+        opacity: 0;
+      }
     }
 
     .mango.split {
@@ -111,14 +137,15 @@
   <div id="scene">
     <img src="istockphoto-1352881713-612x612.jpg" alt="Mango" class="mango" id="mango">
     <img src="360_F_91255480_4lDbHi5W7B8qVQSowAXBxjMR5YzqJUlE.jpg" alt="Knife" class="knife" id="knife">
-    <div class="text" id="mangoText">Slice me!</div>
   </div>
 
   <div id="finalScene">
     <div class="message">Be My Valentine?</div>
     <button class="yes-button" id="yesButton">Yes</button>
-    <img src="Photo on 19-03-2024 at 8.42 AM.jpg" alt="Couple Photo" class="hidden-pic" id="couplePhoto">
+    <img src="Photo-on-19-03-2024-at-8.42-AM.jpg" alt="Couple Photo" class="hidden-pic" id="couplePhoto">
   </div>
+
+  <div class="fireworks" id="fireworks"></div>
 
   <script>
     const knife = document.getElementById('knife');
@@ -128,59 +155,51 @@
     const finalScene = document.getElementById('finalScene');
     const yesButton = document.getElementById('yesButton');
     const couplePhoto = document.getElementById('couplePhoto');
-    const mangoText = document.getElementById('mangoText');
+    const fireworksContainer = document.getElementById('fireworks');
 
     let isDragging = false;
 
-    // Make the knife draggable
-    knife.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      knife.classList.add('dragging');
-    });
-
+    // Knife follows mouse with dramatic effect
     document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        knife.style.left = `${e.pageX}px`;
-        knife.style.top = `${e.pageY}px`;
-      }
+      knife.style.left = `${Math.min(window.innerWidth - 50, Math.max(50, e.pageX))}px`;
+      knife.style.top = `${Math.min(window.innerHeight - 50, Math.max(50, e.pageY))}px`;
     });
 
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      knife.classList.remove('dragging');
+    // Slice the mango
+    knife.addEventListener('click', () => {
+      mango.classList.add('split');
+
+      setTimeout(() => {
+        scene.style.display = 'none';
+        finalScene.style.display = 'block';
+        body.style.background = "url('istockphoto-1133758459-612x612.jpg') no-repeat center center";
+        body.style.backgroundSize = 'cover';
+        showFireworks();
+      }, 1000);
     });
 
-    // Slice the mango when the knife touches it
-    knife.addEventListener('mouseup', (e) => {
-      const knifeRect = knife.getBoundingClientRect();
-      const mangoRect = mango.getBoundingClientRect();
+    // "Yes" button animation
+    yesButton.addEventListener('click', () => {
+      yesButton.style.display = 'none';
+      couplePhoto.style.display = 'block';
+      body.style.background = 'black';
+    });
 
-      // Check if knife overlaps mango
-      if (
-        knifeRect.right > mangoRect.left &&
-        knifeRect.left < mangoRect.right &&
-        knifeRect.bottom > mangoRect.top &&
-        knifeRect.top < mangoRect.bottom
-      ) {
-        mangoText.style.display = 'none';
-        mango.classList.add('split');
+    // Fireworks effect
+    function showFireworks() {
+      for (let i = 0; i < 50; i++) {
+        const firework = document.createElement('div');
+        firework.classList.add('firework');
+        firework.style.left = `${Math.random() * 100}%`;
+        firework.style.top = `${Math.random() * 100}%`;
+        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        fireworksContainer.appendChild(firework);
 
         setTimeout(() => {
-          body.style.background = "url('istockphoto-1133758459-612x612.jpg') no-repeat center center";
-          body.style.backgroundSize = 'cover';
-          scene.style.display = 'none';
-          finalScene.style.display = 'block';
-        }, 1000);
+          firework.remove();
+        }, 1500);
       }
-    });
-
-    // Handle "Yes" button click
-    yesButton.addEventListener('click', () => {
-      yesButton.style.transform = 'scale(2)';
-      setTimeout(() => {
-        couplePhoto.style.display = 'block';
-      }, 500);
-    });
+    }
   </script>
 </body>
 </html>

@@ -163,22 +163,16 @@
 document.addEventListener('mousemove', (e) => {
   knife.style.left = `${e.pageX - knife.offsetWidth / 2}px`;
   knife.style.top = `${e.pageY - knife.offsetHeight / 2}px`;
-});
 
-
-  // Slice the mango
- knife.addEventListener('click', () => {
+  // Detect if mango is hovered
   const mangoRect = mango.getBoundingClientRect();
-  const knifeRect = knife.getBoundingClientRect();
-
   if (
-    knifeRect.right > mangoRect.left &&
-    knifeRect.left < mangoRect.right &&
-    knifeRect.bottom > mangoRect.top &&
-    knifeRect.top < mangoRect.bottom
+    e.pageX > mangoRect.left &&
+    e.pageX < mangoRect.right &&
+    e.pageY > mangoRect.top &&
+    e.pageY < mangoRect.bottom
   ) {
     mango.classList.add('split');
-
     setTimeout(() => {
       scene.style.display = 'none';
       finalScene.style.display = 'block';

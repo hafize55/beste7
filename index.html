@@ -59,7 +59,7 @@
 
     .yes-button {
       display: inline-block;
-      background: red; /* Changed to red */
+      background: red;
       color: white;
       padding: 20px 40px;
       font-size: 24px;
@@ -67,7 +67,7 @@
       border-radius: 50px;
       cursor: pointer;
       animation: flash 1s infinite alternate ease-in-out;
-      font-family: 'Comic Sans MS', cursive; /* Added cursive font */
+      font-family: 'Comic Sans MS', cursive;
     }
 
     @keyframes flash {
@@ -78,9 +78,9 @@
     .hidden-pic {
       display: none;
       margin-top: 20px;
-      width: 300px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      width: 600px; /* Enlarged photo */
+      border-radius: 30px;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
     }
 
     .fireworks {
@@ -118,11 +118,12 @@
     }
 
     .dancing-banana {
-      width: 100px;
+      width: 150px; /* Banana is larger */
       position: absolute;
       bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
+      display: none;
       animation: dance 2s infinite ease-in-out;
     }
 
@@ -131,25 +132,12 @@
       50% { transform: translateX(-50%) rotate(10deg); }
       100% { transform: translateX(-50%) rotate(-10deg); }
     }
-
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: red;
-      animation: confetti-fall 3s infinite ease-in-out;
-    }
-
-    @keyframes confetti-fall {
-      0% { transform: translateY(0) rotate(0); }
-      100% { transform: translateY(100vh) rotate(720deg); }
-    }
   </style>
 </head>
 <body>
   <div id="scene">
     <img src="istockphoto-1352881713-612x612 Background Removed.png" alt="Mango" class="mango" id="mango">
-    <img src="360_F_91255480_4lDbHi5W7B8qVQSowAXBxjMR5YzqJUlE Background Removed.png" class="knife" id="knife">
+    <img src="360_F_91255480_4lDbHi5W7B8qVQSowAXBxjMR5YzqJUlE Background Removed.png" alt="Knife" class="knife" id="knife">
   </div>
 
   <div id="finalScene">
@@ -197,7 +185,7 @@
           scene.style.display = 'none';
           finalScene.style.display = 'block';
           showFireworks();
-          dancingBanana.style.display = 'block';
+          dancingBanana.style.display = 'block'; // Banana now shows
         }, 2000);
       }
     }
@@ -211,38 +199,22 @@
         firework.style.left = `${Math.random() * 100}%`;
         firework.style.top = `${Math.random() * 100}%`;
         firework.style.background = colors[Math.floor(Math.random() * colors.length)];
-        firework.style.animationDuration = `${Math.random() * 1 + 1}s`;
+        firework.style.animationDuration = `${Math.random() * 2 + 2}s`;
         fireworksContainer.appendChild(firework);
 
         setTimeout(() => {
           firework.remove();
-        }, 2000);
+        }, 3000);
       }
     }
 
     // Yes button click
     yesButton.addEventListener('click', () => {
       yesButton.style.display = 'none';
-      couplePhoto.style.display = 'block'; // Show the couple photo
+      couplePhoto.style.display = 'block';
       body.style.background = 'linear-gradient(45deg, red, orange, yellow, green, blue, purple)';
-      showFireworks(); // More fireworks on click
-      showConfetti(); // Confetti explosion
+      showFireworks(); // Additional fireworks
     });
-
-    // Confetti explosion
-    function showConfetti() {
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = `${Math.random() * 100}%`;
-        confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        fireworksContainer.appendChild(confetti);
-
-        setTimeout(() => {
-          confetti.remove();
-        }, 3000);
-      }
-    }
   </script>
 </body>
 </html>

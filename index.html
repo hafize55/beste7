@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Card</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      background: url('https://imgur.com/a/xq3ENVv') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background 1s ease;
+    }
+
+    #scene {
+      position: relative;
+      text-align: center;
+    }
+
+    .mango {
+      width: 150px;
+      position: relative;
+      animation: bounce 1s infinite alternate;
+    }
+
+    .knife {
+      width: 100px;
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .knife.dragging {
+      cursor: grabbing;
+    }
+
+    .text {
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    #finalScene {
+      display: none;
+      text-align: center;
+    }
+
+    .message {
+      font-size: 36px;
+      color: red;
+      margin: 20px;
+    }
+
+    .yes-button {
+      display: inline-block;
+      background-color: red;
+      color: white;
+      padding: 10px 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .yes-button:hover {
+      transform: scale(1.1);
+    }
+
+    .hidden-pic {
+      display: none;
+      margin-top: 20px;
+    }
+
+    @keyframes bounce {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes weirdAnimation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2) rotate(15deg); }
+      100% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+    }
+
+    .mango.split {
+      animation: weirdAnimation 1s forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="scene">
+    <img src="https://i.imgur.com/7xTuv9E.png" alt="Mango" class="mango" id="mango">
+    <img src="https://i.imgur.com/fp1c4fQ.png" alt="Knife" class="knife" id="knife">
+    <div class="text" id="mangoText">Slice me!</div>
+  </div>
+
+  <div id="finalScene">
+    <div class="message">Be My Valentine?</div>
+    <button class="yes-button" id="yesButton">Yes</button>
+    <img src="https://i.imgur.com/WEjjpkl.jpg" alt="Couple Photo" class="hidden-pic" id="couplePhoto">
+  </div>
+
+  <script>
+    const knife = document.getElementById('knife');
+    const mango = document.getElementById('mango');
+    const body = document.body;
+    const scene = document.getElementById('scene');
+    const finalScene = document.getElementById('finalScene');
+    const yesButton = document.getElementById('yesButton');
+    const couplePhoto = document.getElementById('couplePhoto');
+    const mangoText = document.getElementById('mangoText');
+
+    let isDragging = false;
+
+    // Make the knife draggable
+    knife.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      knife.classList.add('dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        knife.style.left = `${e.pageX}px`;
+        knife.style.top = `${e.pageY}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      knife.classList.remove('dragging');
+    });
+
+    // Slice the mango when the knife touches it
+    knife.addEventListener('mouseup', (e) => {
+      const knifeRect = knife.getBoundingClientRect();
+      const mangoRect = mango.getBoundingClientRect();
+
+      // Check if knife overlaps mango
+      if (
+        knifeRect.right > mangoRect.left &&
+        knifeRect.left < mangoRect.right &&
+        knifeRect.bottom > mangoRect.top &&
+        knifeRect.top < mangoRect.bottom
+      ) {
+        mangoText.style.display = 'none';
+        mango.classList.add('split');
+
+        setTimeout(() => {
+          body.style.background = "url('https://imgur.com/a/WEjjpkl.jpg') no-repeat center center";
+          body.style.backgroundSize = 'cover';
+          scene.style.display = 'none';
+          finalScene.style.display = 'block';
+        }, 1000);
+      }
+    });
+
+    // Handle "Yes" button click
+    yesButton.addEventListener('click', () => {
+      yesButton.style.transform = 'scale(2)';
+      setTimeout(() => {
+        couplePhoto.style.display = 'block';
+      }, 500);
+    });
+  </script>
+</body>
+</html>

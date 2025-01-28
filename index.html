@@ -146,60 +146,60 @@
   </div>
 
   <div class="fireworks" id="fireworks"></div>
+  
+      <script>
+  const knife = document.getElementById('knife');
+  const mango = document.getElementById('mango');
+  const body = document.body;
+  const scene = document.getElementById('scene');
+  const finalScene = document.getElementById('finalScene');
+  const yesButton = document.getElementById('yesButton');
+  const couplePhoto = document.getElementById('couplePhoto');
+  const fireworksContainer = document.getElementById('fireworks');
 
-  <script>
-    const knife = document.getElementById('knife');
-    const mango = document.getElementById('mango');
-    const body = document.body;
-    const scene = document.getElementById('scene');
-    const finalScene = document.getElementById('finalScene');
-    const yesButton = document.getElementById('yesButton');
-    const couplePhoto = document.getElementById('couplePhoto');
-    const fireworksContainer = document.getElementById('fireworks');
+  let isDragging = false;
 
-    let isDragging = false;
+  // Knife follows mouse
+  document.addEventListener('mousemove', (e) => {
+    knife.style.left = `${Math.min(window.innerWidth - 50, Math.max(50, e.pageX))}px`;
+    knife.style.top = `${Math.min(window.innerHeight - 50, Math.max(50, e.pageY))}px`;
+  });
 
-    // Knife follows mouse with dramatic effect
-    document.addEventListener('mousemove', (e) => {
-      knife.style.left = `${Math.min(window.innerWidth - 50, Math.max(50, e.pageX))}px`;
-      knife.style.top = `${Math.min(window.innerHeight - 50, Math.max(50, e.pageY))}px`;
-    });
+  // Slice the mango
+  knife.addEventListener('click', () => {
+    mango.classList.add('split');
 
-    // Slice the mango
-    knife.addEventListener('click', () => {
-      mango.classList.add('split');
+    setTimeout(() => {
+      scene.style.display = 'none';
+      finalScene.style.display = 'block';
+      body.style.background = "url('istockphoto-1133758459-612x612.jpg') no-repeat center center";
+      body.style.backgroundSize = 'cover';
+      showFireworks();
+    }, 1000);
+  });
+
+  // "Yes" button click
+  yesButton.addEventListener('click', () => {
+    yesButton.style.display = 'none';
+    couplePhoto.style.display = 'block';
+    body.style.background = 'black';
+  });
+
+  // Fireworks effect
+  function showFireworks() {
+    for (let i = 0; i < 50; i++) {
+      const firework = document.createElement('div');
+      firework.classList.add('firework');
+      firework.style.left = `${Math.random() * 100}%`;
+      firework.style.top = `${Math.random() * 100}%`;
+      firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      fireworksContainer.appendChild(firework);
 
       setTimeout(() => {
-        scene.style.display = 'none';
-        finalScene.style.display = 'block';
-        body.style.background = "url('istockphoto-1133758459-612x612.jpg') no-repeat center center";
-        body.style.backgroundSize = 'cover';
-        showFireworks();
-      }, 1000);
-    });
-
-    // "Yes" button animation
-    yesButton.addEventListener('click', () => {
-      yesButton.style.display = 'none';
-      couplePhoto.style.display = 'block';
-      body.style.background = 'black';
-    });
-
-    // Fireworks effect
-    function showFireworks() {
-      for (let i = 0; i < 50; i++) {
-        const firework = document.createElement('div');
-        firework.classList.add('firework');
-        firework.style.left = `${Math.random() * 100}%`;
-        firework.style.top = `${Math.random() * 100}%`;
-        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        fireworksContainer.appendChild(firework);
-
-        setTimeout(() => {
-          firework.remove();
-        }, 1500);
-      }
+        firework.remove();
+      }, 1500);
     }
-  </script>
-</body>
-</html>
+  }
+</script>
+   
+

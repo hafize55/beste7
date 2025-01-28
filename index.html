@@ -160,13 +160,23 @@
   let isDragging = false;
 
   // Knife follows mouse
-  document.addEventListener('mousemove', (e) => {
-    knife.style.left = `${Math.min(window.innerWidth - 50, Math.max(50, e.pageX))}px`;
-    knife.style.top = `${Math.min(window.innerHeight - 50, Math.max(50, e.pageY))}px`;
-  });
+document.addEventListener('mousemove', (e) => {
+  knife.style.left = `${e.pageX - knife.offsetWidth / 2}px`;
+  knife.style.top = `${e.pageY - knife.offsetHeight / 2}px`;
+});
+
 
   // Slice the mango
-  knife.addEventListener('click', () => {
+ knife.addEventListener('click', () => {
+  const mangoRect = mango.getBoundingClientRect();
+  const knifeRect = knife.getBoundingClientRect();
+
+  if (
+    knifeRect.right > mangoRect.left &&
+    knifeRect.left < mangoRect.right &&
+    knifeRect.bottom > mangoRect.top &&
+    knifeRect.top < mangoRect.bottom
+  ) {
     mango.classList.add('split');
 
     setTimeout(() => {
@@ -176,30 +186,8 @@
       body.style.backgroundSize = 'cover';
       showFireworks();
     }, 1000);
-  });
-
-  // "Yes" button click
-  yesButton.addEventListener('click', () => {
-    yesButton.style.display = 'none';
-    couplePhoto.style.display = 'block';
-    body.style.background = 'black';
-  });
-
-  // Fireworks effect
-  function showFireworks() {
-    for (let i = 0; i < 50; i++) {
-      const firework = document.createElement('div');
-      firework.classList.add('firework');
-      firework.style.left = `${Math.random() * 100}%`;
-      firework.style.top = `${Math.random() * 100}%`;
-      firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-      fireworksContainer.appendChild(firework);
-
-      setTimeout(() => {
-        firework.remove();
-      }, 1500);
-    }
   }
+});
 </script>
    
 

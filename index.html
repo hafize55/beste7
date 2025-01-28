@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Comic Sans MS', cursive;
       overflow: hidden;
       background: url('istockphoto-1133758459-612x612.jpg') no-repeat center center;
       background-size: cover;
@@ -25,7 +25,7 @@
     .mango {
       width: 200px;
       position: relative;
-      animation: bounce 1s infinite alternate;
+      animation: wobble 2s infinite alternate ease-in-out;
     }
 
     .knife {
@@ -34,8 +34,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      cursor: pointer;
-      transition: transform 0.1s;
+      cursor: crosshair;
       filter: drop-shadow(0 0 10px red);
     }
 
@@ -46,20 +45,22 @@
 
     .message {
       font-size: 48px;
-      color: white;
-      animation: fadeIn 3s ease forwards;
+      color: red;
+      font-style: italic;
+      text-shadow: 2px 2px yellow;
+      animation: rotateText 5s infinite;
     }
 
     .yes-button {
       display: inline-block;
-      background-color: red;
+      background-color: pink;
       color: white;
-      padding: 10px 20px;
-      font-size: 20px;
-      border: none;
-      border-radius: 10px;
+      padding: 20px 40px;
+      font-size: 24px;
+      border: 5px dashed yellow;
+      border-radius: 50px;
       cursor: pointer;
-      animation: bounce 2s infinite alternate ease-in-out;
+      animation: growShrink 2s infinite alternate ease-in-out;
     }
 
     .hidden-pic {
@@ -79,30 +80,43 @@
 
     .firework {
       position: absolute;
-      width: 5px;
-      height: 5px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: white;
-      animation: explode 1.5s ease-out forwards;
+      animation: explode 5s infinite ease-in-out;
     }
 
-    @keyframes bounce {
-      from { transform: translateY(0); }
-      to { transform: translateY(-10px); }
+    @keyframes wobble {
+      0% { transform: rotate(-10deg); }
+      50% { transform: rotate(10deg) scale(1.1); }
+      100% { transform: rotate(-10deg); }
     }
 
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+    @keyframes rotateText {
+      0% { transform: rotate(0); }
+      50% { transform: rotate(360deg); }
+      100% { transform: rotate(0); }
+    }
+
+    @keyframes growShrink {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2); }
     }
 
     @keyframes explode {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(10); opacity: 0; }
+      0% { transform: scale(0.5); opacity: 1; }
+      50% { transform: scale(5); opacity: 0.5; }
+      100% { transform: scale(0.5); opacity: 0; }
     }
 
     .mango.split {
-      animation: explode 1s forwards;
+      animation: spinAway 3s ease-in-out forwards;
+    }
+
+    @keyframes spinAway {
+      0% { transform: rotate(0) scale(1); opacity: 1; }
+      100% { transform: rotate(720deg) scale(0); opacity: 0; }
     }
   </style>
 </head>
@@ -113,8 +127,8 @@
   </div>
 
   <div id="finalScene">
-    <div class="message">Be My Valentine?</div>
-    <button class="yes-button" id="yesButton">Yes</button>
+    <div class="message">BE MY VALENTINE, YOU FOOL!</div>
+    <button class="yes-button" id="yesButton">YESSS!!!</button>
     <img src="Photo-on-19-03-2024-at-8.42-AM.jpg" alt="Couple Photo" class="hidden-pic" id="couplePhoto">
   </div>
 
@@ -133,10 +147,8 @@
     document.addEventListener('mousemove', (e) => {
       knife.style.left = `${e.pageX - knife.offsetWidth / 2}px`;
       knife.style.top = `${e.pageY - knife.offsetHeight / 2}px`;
-    });
 
-    // Mango splits on hover
-    document.addEventListener('mousemove', (e) => {
+      // Mango hover detection
       const mangoRect = mango.getBoundingClientRect();
       if (
         e.pageX > mangoRect.left &&
@@ -148,7 +160,7 @@
       }
     });
 
-    // Mango splitting function
+    // Mango splits
     function splitMango() {
       if (!mango.classList.contains('split')) {
         mango.classList.add('split');
@@ -156,13 +168,13 @@
           scene.style.display = 'none';
           finalScene.style.display = 'block';
           showFireworks();
-        }, 1000);
+        }, 2000);
       }
     }
 
-    // Fireworks effect
+    // Fireworks
     function showFireworks() {
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 100; i++) {
         const firework = document.createElement('div');
         firework.classList.add('firework');
         firework.style.left = `${Math.random() * 100}%`;
@@ -172,9 +184,17 @@
 
         setTimeout(() => {
           firework.remove();
-        }, 1500);
+        }, 5000);
       }
     }
+
+    // Yes button click
+    yesButton.addEventListener('click', () => {
+      yesButton.style.display = 'none';
+      const couplePhoto = document.getElementById('couplePhoto');
+      couplePhoto.style.display = 'block';
+      body.style.background = 'black';
+    });
   </script>
 </body>
 </html>
